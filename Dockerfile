@@ -5,6 +5,8 @@ COPY application /application
 WORKDIR /application
 EXPOSE 8000
 
+RUN apk add zlib-dev jpeg-dev gcc musl-dev
+
 RUN apk add postgresql-client build-base postgresql-dev
 
 RUN pip install -r /temp/requirements.txt
