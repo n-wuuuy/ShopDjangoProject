@@ -1,6 +1,7 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 
 class GoodsSize(models.Model):
@@ -16,12 +17,15 @@ class Goods(models.Model):
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
-    images = models.ImageField(upload_to=f'photo/{slug}')
+    images = models.ImageField(upload_to=f'photo/{slug.name}')
     likes = models.PositiveIntegerField(default=0)
     size = models.ManyToManyField(GoodsSize)
     discount = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(100)])
     time_create = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey('GoodsCategory', on_delete=models.PROTECT)
+    is_published = models.BooleanField(default=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    company_name = models.CharField(max_length=255, default=owner.name)
 
     class Meta:
         ordering = ['-time_create']
