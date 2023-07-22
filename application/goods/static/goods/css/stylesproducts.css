@@ -1,0 +1,26 @@
+*{
+    box-sizing:content-box;
+}
+
+.btn-light{
+    color: black;
+    background-color: rgb(255, 255, 255);
+    border-color: rgb(199, 119, 252);
+    
+}
+
+.button-sort{
+    margin-right: 3%;
+    margin-left: 77%;
+}
+
+.btn-group-vertical{
+    vertical-align:auto;
+}
+
+.background-color{
+    color: aquamarine;
+}
+
+
+
