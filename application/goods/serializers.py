@@ -3,7 +3,7 @@ from rest_framework import serializers
 from goods.models import Goods
 
 
-class GoodsFilteredByCategorySerializer(serializers.ModelSerializer):
+class GoodsSerializer(serializers.ModelSerializer):
     likes = serializers.IntegerField(read_only=True)
     owner_name = serializers.CharField(read_only=True)
     price_with_discount = serializers.DecimalField(read_only=True, max_digits=10, decimal_places=2)

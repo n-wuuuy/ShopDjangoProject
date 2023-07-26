@@ -1,21 +1,21 @@
-from django.db.models import Count, Case, F
+from django.db.models import Count, Case, F, When
 from django.views.generic import ListView
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from goods.models import Goods
-from goods.serializers import GoodsFilteredByCategorySerializer
+from goods.serializers import GoodsSerializer
 
 
-class GoodsModelView(ModelViewSet):
-    queryset = Goods.objects.all().annotate(likes=Count(Case(clientgoodsrelation__like=True, then=1)),
+class GoodsModelView(ReadOnlyModelViewSet):
+    queryset = Goods.objects.all().annotate(likes=Count(Case(When(clientgoodsrelation__like=True, then=1))),
                                             owner_name=F('owner__username'),
                                             price_with_discount=(F('price') -
                                                                  F('price') *
                                                                  F('discount') / 100),
                                             category_name=F('category__name')
-                                            )
-    serializer_class = GoodsFilteredByCategorySerializer
+                                            ).order_by('time_create')
+    serializer_class = GoodsSerializer
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['name', 'owner_name', 'category__name', 'company_name']
     ordering_fields = ['price_with_discount', 'name', 'likes', 'time_create']
