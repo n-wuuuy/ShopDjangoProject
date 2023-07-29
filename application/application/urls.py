@@ -26,5 +26,7 @@ router.register('api/goods', GoodsModelView)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('goods.urls')),
+    path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.jwt'))
 ]
 urlpatterns += router.urls

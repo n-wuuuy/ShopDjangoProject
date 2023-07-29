@@ -1,7 +1,7 @@
+from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.urls import reverse
-from django.contrib.auth.models import User
 
 
 class GoodsSize(models.Model):
@@ -34,7 +34,7 @@ class Goods(models.Model):
     time_create = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey(GoodsCategory, on_delete=models.PROTECT)
     is_published = models.BooleanField(default=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     company_name = models.CharField(max_length=255, default=owner.name)
 
     class Meta:
