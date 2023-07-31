@@ -14,7 +14,7 @@ class GoodsModelView(ReadOnlyModelViewSet):
                                                                  F('price') *
                                                                  F('discount') / 100),
                                             category_name=F('category__name')
-                                            ).order_by('time_create')
+                                            ).order_by('time_create').prefetch_related('size')
     serializer_class = GoodsSerializer
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['name', 'owner_name', 'category__name', 'company_name']
