@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'goods',
     'users_app',
     'client_goods_relation',
+    'client',
 ]
 
 MIDDLEWARE = [
@@ -62,7 +63,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            'templates'
+            'static'
         ],
         'APP_DIRS': True,
         'OPTIONS': {
