@@ -1,13 +1,15 @@
 from django.db.models import Count, Case, F, When
 from django.views.generic import ListView
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework.permissions import IsAuthenticated
 
 from goods.models import Goods
-from goods.serializers import GoodsSerializer
+from goods.permissions import IsOwnerOrStaffOrReadOnly
+from goods.serializers import GoodsSerializer, GoodsCreateSerializer
+from goods.viewsets import NotCreateViewSet
 
 
-class GoodsModelView(ReadOnlyModelViewSet):
+class GoodsModelView(NotCreateViewSet):
     queryset = Goods.objects.all().annotate(likes=Count(Case(When(clientgoodsrelation__like=True, then=1))),
                                             owner_name=F('owner__username'),
                                             price_with_discount=(F('price') -
@@ -19,6 +21,11 @@ class GoodsModelView(ReadOnlyModelViewSet):
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['name', 'owner_name', 'category__name', 'company_name']
     ordering_fields = ['price_with_discount', 'name', 'likes', 'time_create']
+    permission_classes = [IsOwnerOrStaffOrReadOnly]
+
+    # def perform_create(self, serializer):
+    #     serializer.validated_data['owner'] = self.request.user
+    #     serializer.save()
 
 
 class ShowProducts(ListView):

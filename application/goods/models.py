@@ -6,7 +6,7 @@ from django.urls import reverse
 
 class GoodsSize(models.Model):
     size_name = models.CharField(max_length=50)
-    size_value = models.DecimalField(max_digits=6, decimal_places=2, null=True, default=None)
+    size_value = models.DecimalField(max_digits=6, decimal_places=2, null=True, default=None, blank=True)
 
     def __str__(self):
         return f'{self.size_name} {self.size_value}'
@@ -28,14 +28,14 @@ class Goods(models.Model):
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
-    images = models.ImageField(upload_to=f'photo/')
+    images = models.ImageField(upload_to=f'photo/', blank=True, null=True)
     size = models.ManyToManyField(GoodsSize)
     discount = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(100)])
     time_create = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey(GoodsCategory, on_delete=models.PROTECT)
     is_published = models.BooleanField(default=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    company_name = models.CharField(max_length=255, default=owner.name)
+    company_name = models.CharField(max_length=255)
 
     class Meta:
         ordering = ['-time_create']

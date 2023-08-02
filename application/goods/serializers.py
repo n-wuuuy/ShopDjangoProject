@@ -13,4 +13,11 @@ class GoodsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Goods
         fields = ('name', 'price_with_discount', 'images', 'id', 'likes', 'size',
-                  'owner_name', 'is_published', 'category_name', 'company_name', 'time_create')
+                  'owner_name', 'is_published', 'category_name', 'company_name', 'time_create',
+                  'price', "category")
+
+
+class GoodsCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Goods
+        fields = ('name', 'description', 'price', 'images', 'size', 'discount', 'category', 'company_name')
