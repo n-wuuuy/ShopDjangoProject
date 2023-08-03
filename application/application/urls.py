@@ -18,15 +18,17 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import SimpleRouter
 
-from goods.views import GoodsModelView
+from goods.views import GoodsModelView, GoodsCreateModelView
 
 router = SimpleRouter()
 router.register('api/goods', GoodsModelView)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('goods.urls')),
     path('auth/', include('djoser.urls')),
-    path('auth/', include('djoser.urls.jwt'))
+    path('auth/', include('djoser.urls.jwt')),
+    path('api/goods/create', GoodsCreateModelView.as_view())
 ]
 urlpatterns += router.urls

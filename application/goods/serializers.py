@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from goods.models import Goods
+from goods.models import Goods, GoodsCategory
 
 
 class GoodsSerializer(serializers.ModelSerializer):
@@ -21,3 +21,11 @@ class GoodsCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Goods
         fields = ('name', 'description', 'price', 'images', 'size', 'discount', 'category', 'company_name')
+
+
+# class CategorySerializer(serializers.ModelSerializer):
+#     goods = serializers.RelatedField()
+#
+#     class Meta:
+#         model = GoodsCategory
+#         fields = ('name',)

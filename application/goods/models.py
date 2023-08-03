@@ -2,6 +2,7 @@ from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.urls import reverse
+from django.utils.text import slugify
 
 
 class GoodsSize(models.Model):
@@ -34,7 +35,7 @@ class Goods(models.Model):
     time_create = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey(GoodsCategory, on_delete=models.PROTECT)
     is_published = models.BooleanField(default=True)
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True)
     company_name = models.CharField(max_length=255)
 
     class Meta:
@@ -45,3 +46,7 @@ class Goods(models.Model):
 
     def get_absolute_url(self):
         return reverse(self.category.name, kwargs={'goods_slug': self.slug})
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)

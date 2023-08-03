@@ -1,7 +1,11 @@
 from django.db.models import Count, Case, F, When
 from django.views.generic import ListView
+from rest_framework import status
 from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.generics import ListCreateAPIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.renderers import TemplateHTMLRenderer
+from rest_framework.response import Response
 
 from goods.models import Goods
 from goods.permissions import IsOwnerOrStaffOrReadOnly
@@ -23,9 +27,20 @@ class GoodsModelView(NotCreateViewSet):
     ordering_fields = ['price_with_discount', 'name', 'likes', 'time_create']
     permission_classes = [IsOwnerOrStaffOrReadOnly]
 
-    # def perform_create(self, serializer):
-    #     serializer.validated_data['owner'] = self.request.user
-    #     serializer.save()
+
+class GoodsCreateModelView(ListCreateAPIView):
+    queryset = Goods.objects.all().order_by('time_create').prefetch_related('size')
+    serializer_class = GoodsCreateSerializer
+    permission_classes = [IsAuthenticated]
+    # renderer_classes = [TemplateHTMLRenderer]
+    # template_name = 'homepage.html'
+
+    def perform_create(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid()
+        serializer.validated_data['owner'] = self.request.user
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class ShowProducts(ListView):
