@@ -18,10 +18,11 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import SimpleRouter
 
-from goods.views import GoodsModelView, GoodsCreateModelView
+from goods.views import GoodsModelView, GoodsCreateModelView, CategoryModelView
 
 router = SimpleRouter()
 router.register('api/goods', GoodsModelView)
+router.register('api/category', CategoryModelView)
 
 
 urlpatterns = [

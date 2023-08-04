@@ -23,9 +23,9 @@ class GoodsCreateSerializer(serializers.ModelSerializer):
         fields = ('name', 'description', 'price', 'images', 'size', 'discount', 'category', 'company_name')
 
 
-# class CategorySerializer(serializers.ModelSerializer):
-#     goods = serializers.RelatedField()
-#
-#     class Meta:
-#         model = GoodsCategory
-#         fields = ('name',)
+class CategorySerializer(serializers.ModelSerializer):
+    goods = GoodsSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = GoodsCategory
+        fields = ('name', 'goods')

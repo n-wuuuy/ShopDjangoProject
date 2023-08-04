@@ -6,10 +6,11 @@ from rest_framework.generics import ListCreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
+from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from goods.models import Goods
+from goods.models import Goods, GoodsCategory
 from goods.permissions import IsOwnerOrStaffOrReadOnly
-from goods.serializers import GoodsSerializer, GoodsCreateSerializer
+from goods.serializers import GoodsSerializer, GoodsCreateSerializer, CategorySerializer
 from goods.viewsets import NotCreateViewSet
 
 
@@ -32,6 +33,7 @@ class GoodsCreateModelView(ListCreateAPIView):
     queryset = Goods.objects.all().order_by('time_create').prefetch_related('size')
     serializer_class = GoodsCreateSerializer
     permission_classes = [IsAuthenticated]
+
     # renderer_classes = [TemplateHTMLRenderer]
     # template_name = 'homepage.html'
 
@@ -41,6 +43,11 @@ class GoodsCreateModelView(ListCreateAPIView):
         serializer.validated_data['owner'] = self.request.user
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class CategoryModelView(ReadOnlyModelViewSet):
+    queryset = GoodsCategory.objects.all().order_by('name').prefetch_related('goods').prefetch_related('goods__size')
+    serializer_class = CategorySerializer
 
 
 class ShowProducts(ListView):

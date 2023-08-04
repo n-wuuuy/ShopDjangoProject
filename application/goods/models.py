@@ -33,7 +33,7 @@ class Goods(models.Model):
     size = models.ManyToManyField(GoodsSize)
     discount = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(100)])
     time_create = models.DateTimeField(auto_now_add=True)
-    category = models.ForeignKey(GoodsCategory, on_delete=models.PROTECT)
+    category = models.ForeignKey(GoodsCategory, on_delete=models.PROTECT, related_name='goods')
     is_published = models.BooleanField(default=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True)
     company_name = models.CharField(max_length=255)
