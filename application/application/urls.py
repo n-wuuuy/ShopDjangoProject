@@ -18,12 +18,14 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import SimpleRouter
 
+from client.views import ClientModelView
 from goods.views import GoodsModelView, GoodsCreateModelView, CategoryModelView, SizeModelView
 
 router = SimpleRouter()
 router.register('api/goods', GoodsModelView)
 router.register('api/category', CategoryModelView)
 router.register('api/size', SizeModelView)
+router.register('api/client', ClientModelView)
 
 
 urlpatterns = [
