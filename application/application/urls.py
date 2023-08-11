@@ -31,6 +31,7 @@ router.register('api/client', ClientModelView)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('goods.urls')),
+    path('', include('client.urls')),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
     path('api/goods/create', GoodsCreateModelView.as_view())

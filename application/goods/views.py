@@ -1,5 +1,5 @@
 from django.db.models import Count, Case, F, When
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from rest_framework import status
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.generics import ListCreateAPIView
@@ -61,3 +61,9 @@ class ShowProducts(ListView):
 
     def get_queryset(self):
         return Goods.objects.filter(category__slug=self.kwargs['category_slug'])
+
+
+class ShowDetailProduct(DetailView):
+    model = Goods
+    slug_field = "slug"
+    template_name = 'goods/productpage.html'

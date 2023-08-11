@@ -10,6 +10,7 @@ class Client(models.Model):
     last_name = models.CharField(max_length=64, null=True, default=None, blank=True)
     profile_photo = models.ImageField(upload_to='user-profile', default='Default_profile.jpg')
     phone_number = models.CharField(max_length=30, null=True, blank=True, unique=True, default=None)
+    newsletter_subscription = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user.username}:({self.first_name} {self.last_name})"

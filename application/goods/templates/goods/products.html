@@ -18,7 +18,8 @@
           </nav>
           <div class="row row-cols-1 row-cols-md-3 g-4">
             {% for object in object_list %}
-            <div class="col">
+            <a href="{{ object.get_absolute_url }}">
+                <div class="col">
               <div class="card h-100">
                 <img src="{{ object.images.url }}" class="card-img-top" alt="...">
                 <div class="card-body">
@@ -27,6 +28,7 @@
                 </div>
               </div>
             </div>
+            </a>
             {% endfor %}
           </div>
     </div>

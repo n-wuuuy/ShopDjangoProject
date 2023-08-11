@@ -29,7 +29,7 @@ class Goods(models.Model):
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
-    images = models.ImageField(upload_to=f'photo/', blank=True, null=True)
+    images = models.ImageField(upload_to=f'photo/')
     size = models.ManyToManyField(GoodsSize, related_name='size_goods')
     discount = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(100)])
     time_create = models.DateTimeField(auto_now_add=True)
@@ -45,7 +45,7 @@ class Goods(models.Model):
         return f'{self.name} :{self.price}'
 
     def get_absolute_url(self):
-        return reverse(self.category.name, kwargs={'goods_slug': self.slug})
+        return reverse('goods_detail', kwargs={'slug': self.slug})
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)

@@ -1,0 +1,31 @@
+{% extends 'goods/base.html' %}
+{% load rest_framework %}
+{% load static %}
+
+
+{% block content %}
+    <div class="MainInfo">
+        <figure class="figure">
+            <img src="{{ object.images.url }}" class="figure-img img-fluid rounded" alt="...">
+          </figure>
+        <button type="button" class="btn btn-outline-secondary">Добавить в корзину</button>
+        <button type="button" class="btn btn-outline-secondary">Купить</button>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Name -{{object.name}} </li>
+            <li class="list-group-item">Author - {{object.owner}}</li>
+            <li class="list-group-item">Price -{{object.price}}$</li>
+            <li class="list-group-item">Description - {{object.description}}</li>
+            <li class="list-group-item">Company - {{object.company_name}}</li>
+            <li class="list-group-item">Published - {{object.is_published}}</li>
+            <li class="list-group-item">Size :</li>
+            <ul class="list-group">
+                {% for size in object.size.all %}
+                <li class="list-group-item">
+                  <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
+                  {{size}}
+                </li>
+                {% endfor %}
+              </ul>
+          </ul>
+    </div>
+{% endblock %}
