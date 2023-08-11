@@ -1,4 +1,6 @@
 from django.db.models import Count, Case, F, When
+from django.shortcuts import redirect
+from django.views import View
 from django.views.generic import ListView, DetailView
 from rest_framework import status
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -8,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from client.models import Client
+from goods.forms import CommentForm
 from goods.models import Goods, GoodsCategory, GoodsSize
 from goods.permissions import IsOwnerOrStaffOrReadOnly
 from goods.serializers import GoodsSerializer, GoodsCreateSerializer, CategorySerializer, SizeSerializer
@@ -67,3 +70,14 @@ class ShowDetailProduct(DetailView):
     model = Goods
     slug_field = "slug"
     template_name = 'goods/productpage.html'
+
+
+class AddComment(View):
+    def post(self, request, pk):
+        form = CommentForm(request.POST)
+        goods = Goods.objects.get(id=pk)
+        if form.is_valid():
+            form = form.save(commit=False)
+            form.goods = goods
+            form.save()
+        return redirect(goods.get_absolute_url())

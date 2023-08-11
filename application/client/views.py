@@ -17,3 +17,5 @@ class ClientModelView(mixins.RetrieveModelMixin,
     queryset = Client.objects.all().prefetch_related('user')
     serializer_class = ClientSerializer
     permission_classes = [IsOwnerOrReadOnly]
+
+

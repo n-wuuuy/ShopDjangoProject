@@ -32,7 +32,7 @@ services:
       context: .
     hostname: worker
     entrypoint: celery
-    command: -A celery_app.app worker --loglevel=info
+    command: -A application worker --loglevel=info
     volumes:
       - ./application:/application
     links:
@@ -45,18 +45,3 @@ services:
       - DB_NAME=dbname
       - DB_USER=dbuser
       - DB_PASS=pass
-
-  flower:
-    build:
-      context: .
-    hostname: flower
-    entrypoint: celery
-    command: -A celery_app.app flower
-    volumes:
-      - ./application:/application
-    links:
-      - redis
-    depends_on:
-      - redis
-    ports:
-      - "5555:5555"

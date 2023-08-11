@@ -50,3 +50,19 @@ class Goods(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+
+class GoodsImages(models.Model):
+    title = models.CharField(max_length=100)
+    image = models.ImageField(upload_to=f'photo/')
+    goods = models.ForeignKey(Goods, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
+
+
+class Comment(models.Model):
+    email = models.EmailField()
+    text = models.TextField()
+    goods = models.ForeignKey(Goods, on_delete=models.CASCADE)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True)
