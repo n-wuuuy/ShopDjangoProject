@@ -53,16 +53,17 @@ class Goods(models.Model):
 
 
 class GoodsImages(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, blank=True)
     image = models.ImageField(upload_to=f'photo/')
-    goods = models.ForeignKey(Goods, on_delete=models.CASCADE)
+    goods = models.ForeignKey(Goods, on_delete=models.CASCADE, related_name='goods_images')
 
     def __str__(self):
         return self.title
 
 
 class Comment(models.Model):
-    email = models.EmailField()
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+                              blank=True, related_name='owner_comment')
     text = models.TextField()
-    goods = models.ForeignKey(Goods, on_delete=models.CASCADE)
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True)
+    goods = models.ForeignKey(Goods, on_delete=models.CASCADE, related_name='comment')
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, related_name='children')

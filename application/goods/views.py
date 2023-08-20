@@ -1,7 +1,4 @@
 from django.db.models import Count, Case, F, When
-from django.shortcuts import redirect
-from django.views import View
-from django.views.generic import ListView, DetailView
 from rest_framework import status
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.generics import ListCreateAPIView
@@ -9,11 +6,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from client.models import Client
-from goods.forms import CommentForm
 from goods.models import Goods, GoodsCategory, GoodsSize
 from goods.permissions import IsOwnerOrStaffOrReadOnly
-from goods.serializers import GoodsSerializer, GoodsCreateSerializer, CategorySerializer, SizeSerializer
+from goods.serializers import GoodsListSerializer, GoodsCreateSerializer, CategorySerializer, SizeSerializer, \
+    GoodsDitailSerializer
 from goods.viewsets import NotCreateViewSet
 
 
@@ -25,11 +21,16 @@ class GoodsModelView(NotCreateViewSet):
                                                                  F('discount') / 100),
                                             ).order_by('time_create').prefetch_related('size').select_related(
         'category')
-    serializer_class = GoodsSerializer
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['name', 'owner_name', 'category', 'company_name']
     ordering_fields = ['price_with_discount', 'name', 'likes', 'time_create']
     permission_classes = [IsOwnerOrStaffOrReadOnly]
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return GoodsDitailSerializer
+        else:
+            return GoodsListSerializer
 
 
 class GoodsCreateModelView(ListCreateAPIView):
@@ -55,29 +56,3 @@ class SizeModelView(ReadOnlyModelViewSet):
     queryset = GoodsSize.objects.all().order_by('size_name').prefetch_related('size_goods__category').prefetch_related(
         'size_goods__size')
     serializer_class = SizeSerializer
-
-
-class ShowProducts(ListView):
-    model = Goods
-    template_name = 'goods/products.html'
-    allow_empty = False
-
-    def get_queryset(self):
-        return Goods.objects.filter(category__slug=self.kwargs['category_slug'])
-
-
-class ShowDetailProduct(DetailView):
-    model = Goods
-    slug_field = "slug"
-    template_name = 'goods/productpage.html'
-
-
-class AddComment(View):
-    def post(self, request, pk):
-        form = CommentForm(request.POST)
-        goods = Goods.objects.get(id=pk)
-        if form.is_valid():
-            form = form.save(commit=False)
-            form.goods = goods
-            form.save()
-        return redirect(goods.get_absolute_url())
