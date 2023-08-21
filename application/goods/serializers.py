@@ -21,40 +21,24 @@ class GoodsListSerializer(serializers.ModelSerializer):
                   'price', "category")
 
 
-class FilterReviewListSerializer(serializers.ListSerializer):
-    def to_representation(self, data):
-        data = data.filter(parent=None)
-        return super().to_representation(data)
-
-
-class RecursiveSerializer(serializers.Serializer):
-    def to_representation(self, value):
-        serializer = self.parent.parent.__class__(value, context=self.context)
-        return serializer.data
-
-
 class CommentSerializer(serializers.ModelSerializer):
-    children = RecursiveSerializer(many=True)
-    owner_comment = serializers.CharField(source='owner.username')
-
     class Meta:
-        list_serializer_class = FilterReviewListSerializer
         model = Comment
-        fields = ("id", "owner_comment", "text", "children")
+        fields = ("id", "owner", "text")
 
 
 class GoodsDitailSerializer(serializers.ModelSerializer):
     goods_images = GoodsImagesSerializer(many=True, read_only=True)
     size = serializers.StringRelatedField(read_only=True, many=True)
     price_with_discount = serializers.DecimalField(read_only=True, max_digits=10, decimal_places=2)
-    owner_name = serializers.CharField(read_only=True)
+    owner_name = serializers.CharField(source='owner.username')
     likes = serializers.IntegerField(read_only=True)
     comment = CommentSerializer(many=True)
 
     class Meta:
         model = Goods
-        fields = ('name', 'description', 'price', 'discount', 'price_with_discount', 'images', 'comment',
-                  'goods_images', 'size', 'is_published', 'owner_name', 'company_name', 'likes')
+        fields = ('name', 'description', 'price', 'discount', 'price_with_discount', 'images',
+                  'goods_images', 'size', 'comment', 'is_published', 'owner_name', 'company_name', 'likes')
 
 
 class GoodsCreateSerializer(serializers.ModelSerializer):
