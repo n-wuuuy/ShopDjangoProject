@@ -61,3 +61,9 @@ class SizeSerializer(serializers.ModelSerializer):
     class Meta:
         model = GoodsSize
         fields = ('size_name', 'size_value', 'size_goods')
+
+
+class CommentCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        exclude = ("owner",)

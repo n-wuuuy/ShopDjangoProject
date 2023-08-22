@@ -39,6 +39,9 @@ class GoodsAdmin(admin.ModelAdmin):
             "fields": (("owner", "company_name"),)
         }),
         (None, {
+            "fields": (("category", "size"),)
+        }),
+        (None, {
             "fields": (("images", "get_image"),)
         })
     )
@@ -56,12 +59,13 @@ class GoodsCategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('email', 'goods')
+    list_display = ('owner', 'goods')
 
 
 @admin.register(GoodsImages)
 class GoodsImagesAdmin(admin.ModelAdmin):
     list_display = ('title', 'image', 'goods', 'get_image')
+
     def get_image(self, obj):
         return mark_safe(f'<img src={obj.image.url} width="100" height="110"')
 

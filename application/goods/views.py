@@ -10,7 +10,7 @@ from rest_framework.viewsets import ReadOnlyModelViewSet
 from goods.models import Goods, GoodsCategory, GoodsSize, Comment
 from goods.permissions import IsOwnerOrStaffOrReadOnly
 from goods.serializers import GoodsListSerializer, GoodsCreateSerializer, CategorySerializer, SizeSerializer, \
-    GoodsDitailSerializer
+    GoodsDitailSerializer, CommentCreateSerializer
 from goods.viewsets import NotCreateViewSet
 
 
@@ -43,6 +43,7 @@ class GoodsCreateModelView(ListCreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid()
         serializer.validated_data['owner'] = self.request.user
+        print(serializer.validated_data['images'])
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -55,3 +56,15 @@ class CategoryModelView(ReadOnlyModelViewSet):
 class SizeModelView(ReadOnlyModelViewSet):
     queryset = GoodsSize.objects.all().order_by('size_name').prefetch_related('size_goods__category')
     serializer_class = SizeSerializer
+
+
+class CommentCreateView(ListCreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentCreateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid()
+        serializer.validated_data['owner'] = self.request.user
+        serializer.save()
