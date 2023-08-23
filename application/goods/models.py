@@ -25,11 +25,14 @@ class GoodsCategory(models.Model):
 
 
 class Goods(models.Model):
+    def file_name(instance, filename):
+        return '/'.join(['images', str(instance.name), filename])
+
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
-    images = models.ImageField(upload_to=f'photo/', blank=True, null=True)
+    image = models.ImageField(upload_to=file_name, blank=True, null=True)
     size = models.ManyToManyField(GoodsSize, related_name='size_goods')
     discount = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(100)])
     time_create = models.DateTimeField(auto_now_add=True)

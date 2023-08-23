@@ -16,7 +16,7 @@ class GoodsListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Goods
-        fields = ('name', 'price_with_discount', 'images', 'id', 'likes',
+        fields = ('name', 'price_with_discount', 'image', 'id', 'likes',
                   'is_published', 'company_name', 'time_create',
                   'price', "category")
 
@@ -37,14 +37,14 @@ class GoodsDitailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Goods
-        fields = ('name', 'description', 'price', 'discount', 'price_with_discount', 'images',
+        fields = ('name', 'description', 'price', 'discount', 'price_with_discount', 'image',
                   'goods_images', 'size', 'comment', 'is_published', 'owner_name', 'company_name', 'likes')
 
 
 class GoodsCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Goods
-        fields = ('name', 'description', 'price', 'images', 'size', 'discount', 'category', 'company_name')
+        exclude = ('owner', 'slug')
 
 
 class CategorySerializer(serializers.ModelSerializer):

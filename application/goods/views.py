@@ -1,8 +1,12 @@
+import json
+
 from django.db.models import Count, Case, F, When, Prefetch
+from django.http import HttpResponse
 from djoser.conf import User
 from rest_framework import status
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.generics import ListCreateAPIView
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
@@ -35,17 +39,17 @@ class GoodsModelView(NotCreateViewSet):
 
 
 class GoodsCreateModelView(ListCreateAPIView):
-    queryset = Goods.objects.all().order_by('time_create').prefetch_related('size')
+    queryset = Goods.objects.all()
     serializer_class = GoodsCreateSerializer
     permission_classes = [IsAuthenticated]
 
-    def perform_create(self, request):
+    def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid()
+        serializer.is_valid(raise_exception=True)
         serializer.validated_data['owner'] = self.request.user
-        print(serializer.validated_data['images'])
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class CategoryModelView(ReadOnlyModelViewSet):

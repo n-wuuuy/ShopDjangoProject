@@ -6,7 +6,7 @@ from goods.views import GoodsModelView, CategoryModelView, SizeModelView, GoodsC
 
 urlpatterns = [
     path('api/goods/create', GoodsCreateModelView.as_view()),
-    path('api/comment/create', CommentCreateView.as_view())
+    path('api/comment/create', CommentCreateView.as_view()),
 ]
 
 router = SimpleRouter()
