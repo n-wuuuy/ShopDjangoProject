@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-from goods.models import Goods, GoodsSize, GoodsCategory, GoodsImages, Comment
+from goods.models import Goods, GoodsSize, GoodsCategory, GoodsImages
 
 
 class GoodsImagesInline(admin.TabularInline):
@@ -12,12 +12,6 @@ class GoodsImagesInline(admin.TabularInline):
     def get_image(self, obj):
         return mark_safe(f'<img src={obj.image.url} width="100" height="110"')
 
-
-class CommentInline(admin.TabularInline):
-    model = Comment
-    extra = 1
-
-
 @admin.register(Goods)
 class GoodsAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
@@ -26,7 +20,7 @@ class GoodsAdmin(admin.ModelAdmin):
     search_fields = ('name', 'category__name', 'company_name', 'owner__username')
     save_on_top = True
     list_editable = ('is_published',)
-    inlines = [GoodsImagesInline, CommentInline]
+    inlines = [GoodsImagesInline]
     readonly_fields = ("get_image",)
     fieldsets = (
         (None, {
@@ -36,18 +30,18 @@ class GoodsAdmin(admin.ModelAdmin):
             "fields": (("price", "discount"),)
         }),
         (None, {
-            "fields": (("owner", "company_name"),)
+            "fields": (("owner", "company_name",),)
         }),
         (None, {
             "fields": (("category", "size"),)
         }),
         (None, {
-            "fields": (("images", "get_image"),)
+            "fields": (("image", "get_image"),)
         })
     )
 
     def get_image(self, obj):
-        return mark_safe(f'<img src={obj.images.url} width="100" height="110"')
+        return mark_safe(f'<img src={obj.image.url} width="100" height="110"')
 
     get_image.short_description = 'Photo'
 
@@ -55,11 +49,6 @@ class GoodsAdmin(admin.ModelAdmin):
 @admin.register(GoodsCategory)
 class GoodsCategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
-
-
-@admin.register(Comment)
-class CommentAdmin(admin.ModelAdmin):
-    list_display = ('owner', 'goods')
 
 
 @admin.register(GoodsImages)

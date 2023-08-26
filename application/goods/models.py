@@ -32,7 +32,7 @@ class Goods(models.Model):
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
-    image = models.ImageField(upload_to=file_name, blank=True, null=True)
+    image = models.ImageField(upload_to=file_name)
     size = models.ManyToManyField(GoodsSize, related_name='size_goods')
     discount = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(100)])
     time_create = models.DateTimeField(auto_now_add=True)
@@ -62,10 +62,3 @@ class GoodsImages(models.Model):
 
     def __str__(self):
         return self.title
-
-
-class Comment(models.Model):
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                              blank=True, related_name='owner_comment')
-    text = models.TextField()
-    goods = models.ForeignKey(Goods, on_delete=models.CASCADE, related_name='comment')
