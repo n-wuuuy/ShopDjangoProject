@@ -9,6 +9,18 @@ class CommentCreateSerializer(serializers.ModelSerializer):
         exclude = ("owner", 'goods')
 
 
+class CommentGoodsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        exclude = ('goods',)
+
+
+class CommentUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = '__all__'
+
+
 class LikeCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
@@ -21,3 +33,9 @@ class LikeCreateSerializer(serializers.ModelSerializer):
             defaults={'like': validated_data.get("like", None)}
         )
         return like
+
+
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = '__all__'
