@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from client_goods_relation.models import Comment, Like
 from client_goods_relation.serializers import CommentCreateSerializer, LikeCreateSerializer, CommentGoodsSerializer, \
-    CommentUserSerializer
+    CommentUserSerializer, LikeUserSerializer
 from goods.models import Goods
 from goods.permissions import IsOwnerOrStaffOrReadOnly
 from goods.viewsets import NotCreateViewSet
@@ -50,3 +50,11 @@ class LikeCreateView(CreateAPIView):
         goods = Goods.objects.get(id=self.kwargs.get('pk'))
         serializer.validated_data['goods'] = goods
         serializer.save(owner=self.request.user)
+
+
+class LikeUserView(NotCreateViewSet):
+    serializer_class = LikeUserSerializer
+    permission_classes = [IsOwnerOrStaffOrReadOnly]
+
+    def get_queryset(self):
+        return Like.objects.filter(owner=self.request.user)

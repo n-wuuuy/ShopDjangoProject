@@ -35,7 +35,7 @@ class LikeCreateSerializer(serializers.ModelSerializer):
         return like
 
 
-class LikeSerializer(serializers.ModelSerializer):
+class LikeUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
         fields = '__all__'

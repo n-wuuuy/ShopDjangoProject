@@ -1,10 +1,12 @@
 from rest_framework.routers import SimpleRouter
 
-from client_goods_relation.views import CommentCreateView, LikeCreateView, CommentGoodsView, CommentUserView
+from client_goods_relation.views import CommentCreateView, LikeCreateView, CommentGoodsView, CommentUserView, \
+    LikeUserView
 from django.urls import path
 
 router = SimpleRouter()
 router.register('api/comment', CommentUserView, basename='user_comment')
+router.register('api/like', LikeUserView, basename='user_like')
 
 urlpatterns = [
     path('api/goods/<int:pk>/comment/add/', CommentCreateView.as_view()),
