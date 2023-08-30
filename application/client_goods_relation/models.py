@@ -18,3 +18,17 @@ class Comment(models.Model):
                               blank=True, related_name='owner_comment')
     text = models.TextField()
     goods = models.ForeignKey(Goods, on_delete=models.CASCADE, related_name='comment')
+
+
+class InFavorites(models.Model):
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True)
+    favorite = models.BooleanField(default=False)
+    goods = models.ForeignKey(Goods, on_delete=models.CASCADE)
+
+
+class Basket(models.Model):
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True)
+    goods = models.ForeignKey(Goods, on_delete=models.CASCADE)
+    quantity = models.SmallIntegerField(default=1)
+    address = models.CharField(max_length=400)
+    card = models.CharField(max_length=16)
