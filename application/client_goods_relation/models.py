@@ -29,6 +29,5 @@ class InFavorites(models.Model):
 class Basket(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True)
     goods = models.ForeignKey(Goods, on_delete=models.CASCADE)
-    quantity = models.SmallIntegerField(default=1)
-    address = models.CharField(max_length=400)
-    card = models.CharField(max_length=16)
+    quantity = models.PositiveSmallIntegerField(default=1)
+

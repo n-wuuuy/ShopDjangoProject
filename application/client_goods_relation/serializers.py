@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from client_goods_relation.models import Comment, Like, InFavorites
+from client_goods_relation.models import Comment, Like, InFavorites, Basket
 
 
 class CommentCreateSerializer(serializers.ModelSerializer):
@@ -59,3 +59,33 @@ class FavoriteUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = InFavorites
         fields = '__all__'
+
+
+class BasketAddGoodsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Basket
+        exclude = ("owner", 'goods')
+
+    def create(self, validated_data):
+        if Basket.objects.filter(owner=validated_data.get('owner', None),
+                                 goods=validated_data.get('goods',
+                                                          None)).exists():
+            values_for_update = {
+                'quantity': validated_data.get('quantity', Basket.objects.get(owner=validated_data.get('owner', None),
+                                                                              goods=validated_data.get('goods',
+                                                                                                       None)).quantity + 1)}
+        else:
+            values_for_update = {
+                'quantity': validated_data.get('quantity', 1)}
+        basket, _ = Basket.objects.update_or_create(
+            owner=validated_data.get('owner', None),
+            goods=validated_data.get('goods', None),
+            defaults=values_for_update
+        )
+        return basket
+
+
+class BasketSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Basket
+        exclude = ('owner',)

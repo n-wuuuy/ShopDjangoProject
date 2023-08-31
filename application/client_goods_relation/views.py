@@ -1,9 +1,10 @@
 from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated
 
-from client_goods_relation.models import Comment, Like, InFavorites
+from client_goods_relation.models import Comment, Like, InFavorites, Basket
 from client_goods_relation.serializers import CommentCreateSerializer, LikeCreateSerializer, CommentGoodsSerializer, \
-    CommentUserSerializer, LikeUserSerializer, FavoriteCreateSerializer, FavoriteUserSerializer
+    CommentUserSerializer, LikeUserSerializer, FavoriteCreateSerializer, FavoriteUserSerializer, \
+    BasketAddGoodsSerializer, BasketSerializers
 from goods.models import Goods
 from goods.permissions import IsOwnerOrStaffOrReadOnly
 from goods.viewsets import NotCreateViewSet
@@ -79,3 +80,24 @@ class FavoriteUserView(NotCreateViewSet):
 
     def get_queryset(self):
         return InFavorites.objects.filter(owner=self.request.user)
+
+
+class BasketAddGoodsView(CreateAPIView):
+    queryset = Basket.objects.all()
+    serializer_class = BasketAddGoodsSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, request, ):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid()
+        goods = Goods.objects.get(id=self.kwargs.get('pk'))
+        serializer.validated_data['goods'] = goods
+        serializer.save(owner=self.request.user)
+
+
+class BasketView(NotCreateViewSet):
+    serializer_class = BasketSerializers
+    permission_classes = [IsOwnerOrStaffOrReadOnly]
+
+    def get_queryset(self):
+        return Basket.objects.filter(owner=self.request.user)
