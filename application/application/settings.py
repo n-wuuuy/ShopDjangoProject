@@ -194,16 +194,16 @@ DJOSER = {
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = 'pukachd@yandex.ru'
-EMAIL_HOST_PASSWORD = 'ikuymydizjqifgkx'
+EMAIL_HOST_USER = 'key'
+EMAIL_HOST_PASSWORD = 'key'
 EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = 'pukachd@yandex.ru'
 
 CELERY_BROKER_URL = 'redis://redis:6379/0'
 
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '318684397456-bks7c2oqn0l4ds5gier6dmo1gt7db62n.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = 'key'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'key'
 
 SOCIAL_AUTH_JSONFIELD_ENABLED = True
 
